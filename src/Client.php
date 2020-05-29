@@ -151,15 +151,11 @@ class Client
      */
     private function createRequest($method, $uri, array $options = [], $body = null)
     {
-        if (empty($body)) {
-            // Empty arrays and NULL data inputs both need casting to an empty JSON object.
-            // See https://stackoverflow.com/a/41150809/2803757
-            $bodyString = '{}';
-        } elseif (is_array($body)) {
-            $bodyString = json_encode($body);
+        if (is_array($body)) {
+            $body = json_encode($body);
         }
 
-        $ret = new Request($method, $uri, [], $bodyString);
+        $ret = new Request($method, $uri, [], $body);
 
         if (isset($options['query'])) {
             $uri = $ret->getUri()->withQuery(is_array($options['query']) ? http_build_query($options['query']) : $options['query']);
